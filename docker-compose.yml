@@ -1,0 +1,16 @@
+version: "3.1"
+
+services:
+  sql-server:
+    container_name: mssql-container
+    image: mcr.microsoft.com/mssql/server:2019-GA-ubuntu-16.04
+    ports:
+      - 1433:1433
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=abcABC123
+    volumes:
+      - ./mssql:/var/opt/mssql/data
+volumes:
+  mssql: 
+      
