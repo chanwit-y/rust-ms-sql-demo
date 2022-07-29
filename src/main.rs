@@ -18,15 +18,6 @@ use tokio_util::compat::TokioAsyncWriteCompatExt;
 // #[cfg(not(all(windows, feature = "sql-browser-tokio")))]
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    // let config = Config::from_ado_string(&CONN_STR)?;
-
-    // let mut config = Config::new();
-
-    // config.host("0.0.0.0");
-    // config.port(1433);
-    // config.database("demo");
-    // config.authentication(AuthMethod::sql_server("SA", "abcABC123"));
-    // let tcp = TcpStream::connect(config.get_addr()).await?;
     let config = get_config();
     let tcp = get_connection(&config).await.unwrap();
 
