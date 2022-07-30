@@ -1,5 +1,5 @@
 [package]
-name = "rust-ms-sql-demo"
+name = "rust_ms_sql_demo"
 version = "0.1.0"
 edition = "2021"
 

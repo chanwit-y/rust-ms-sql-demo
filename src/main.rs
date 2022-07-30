@@ -2,10 +2,13 @@
 // extern crate tiberius;
 // extern crate tokio_core;
 
-use std::result::{Result};
-use tiberius::AuthMethod;
-use tiberius::{Client, Config};
-use tokio::net::TcpStream;
+// use std::result::{Result};
+// use tiberius::AuthMethod;
+
+mod database;
+use tiberius::{Client};
+
+// use tokio::net::TcpStream;
 use tokio_util::compat::TokioAsyncWriteCompatExt;
 // use tiberius::stmt::ResultStreamExt;
 
@@ -18,8 +21,11 @@ use tokio_util::compat::TokioAsyncWriteCompatExt;
 // #[cfg(not(all(windows, feature = "sql-browser-tokio")))]
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    let config = get_config();
-    let tcp = get_connection(&config).await.unwrap();
+    // let config = get_config();
+    // let tcp = get_connection(&config).await.unwrap();
+    // let db: Database::new();
+    let config = database::get_config();
+    let tcp = database::get_connection(&config).await.unwrap();
 
     tcp.set_nodelay(true)?;
 
@@ -43,18 +49,18 @@ async fn main() -> anyhow::Result<()> {
     Ok(())
 }
 
-fn get_config() -> Config {
-    let mut config = Config::new();
+// fn get_config() -> Config {
+//     let mut config = Config::new();
 
-    config.host("0.0.0.0");
-    config.port(1433);
-    config.database("demo");
-    config.authentication(AuthMethod::sql_server("SA", "abcABC123"));
+//     config.host("0.0.0.0");
+//     config.port(1433);
+//     config.database("demo");
+//     config.authentication(AuthMethod::sql_server("SA", "abcABC123"));
 
-    config
-}
+//     config
+// }
 
-async fn get_connection(config: &Config) -> Result<TcpStream, std::io::Error>  {
-    let tcp = TcpStream::connect(config.get_addr()).await;
-    tcp
-}
+// async fn get_connection(config: &Config) -> Result<TcpStream, std::io::Error>  {
+//     let tcp = TcpStream::connect(config.get_addr()).await;
+//     tcp
+// }
