@@ -1,11 +1,11 @@
 use std::result::Result;
-use tiberius::{AuthMethod, Client, Config};
+use tiberius::{AuthMethod, Config};
 use tokio::net::TcpStream;
-use tokio_util::compat::TokioAsyncWriteCompatExt;
+// use tokio_util::compat::TokioAsyncWriteCompatExt;
 
-pub struct Database {
-    //  client: Client,
-}
+// pub struct Database {
+//     //  client: Client,
+// }
 
 // impl Database {
     pub fn get_config() -> Config {
