@@ -4,13 +4,16 @@
 
 // use std::result::{Result};
 // use tiberius::AuthMethod;
-
 mod database;
+
+use rust_ms_sql_demo::utils::db::Util;
 use tiberius::{Client};
 
 // use tokio::net::TcpStream;
 use tokio_util::compat::TokioAsyncWriteCompatExt;
 // use tiberius::stmt::ResultStreamExt;
+
+
 
 // static CONN_STR: Lazy<String> = Lazy::new(|| {
 //     env::var("TIBERIUS_TEST_CONNECTION_STRING").unwrap_or_else(|_| {
@@ -21,6 +24,7 @@ use tokio_util::compat::TokioAsyncWriteCompatExt;
 // #[cfg(not(all(windows, feature = "sql-browser-tokio")))]
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
+    let l = Util{name: String::from("xxxx")};
     // let config = get_config();
     // let tcp = get_connection(&config).await.unwrap();
     // let db: Database::new();
