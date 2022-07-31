@@ -1,5 +1,5 @@
 use std::result::Result;
-use tiberius::{AuthMethod, Client, Config};
+use tiberius::{AuthMethod, Client, Config, Row};
 use tokio::net::TcpStream;
 use tokio_util::compat::{Compat, TokioAsyncWriteCompatExt};
 
@@ -34,15 +34,11 @@ impl Database {
         }
     }
 
-    pub async fn sqlect(&mut self, sql: &str) {
+    pub async fn sqlect(&mut self, sql: &str) -> Vec<Row> {
         let client = &mut self.client;
         let stream = client.simple_query(sql).await.unwrap();
-        let rows = stream.into_first_result().await.unwrap();
+        stream.into_first_result().await.unwrap()
 
-        for row in rows {
-            let table_name: &str = row.get(0).unwrap_or_default();
-            print!("{} \n", table_name);
-        }
     }
 }
 
