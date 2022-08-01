@@ -1,4 +1,4 @@
-use rust_ms_sql_demo::utils::ms_sql_tb::get_table_names;
+use rust_ms_sql_demo::utils::ms_sql_tb::{get_table_names, get_all_colums};
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -14,9 +14,8 @@ async fn main() -> anyhow::Result<()> {
     for tb in &tb_names {
         println!("{}", tb)
     }
-    // if tb_names != null {
-    // tb_names.iter().map(|x| println!("{}", x));
-    // }
+
+    get_all_colums("'t1'").await;
 
     Ok(())
 }

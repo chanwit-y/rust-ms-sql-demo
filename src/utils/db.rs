@@ -40,4 +40,22 @@ impl Database {
         stream.into_first_result().await.unwrap()
 
     }
+
+    pub async fn selelec_where(&mut self, sql: &str) -> Vec<Row> {
+        let client = &mut self.client;
+        let stream = client.query(sql, &[&"t1"]).await.unwrap();
+
+        stream.into_first_result().await.unwrap()
+
+    }
 }
+
+
+// impl<T, U> Into<U> for T
+// where
+//     U: From<T>,
+// {
+//     fn into(self) -> U {
+//         U::from(self)
+//     }
+// }
