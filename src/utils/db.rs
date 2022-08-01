@@ -41,9 +41,3 @@ impl Database {
 
     }
 }
-
-// impl<'a> Default for Database<'a> {
-//     fn default() -> Self {
-//         Self::new()
-//     }
-// }

@@ -1,21 +1,22 @@
-use rust_ms_sql_demo::utils::db::Database;
+use rust_ms_sql_demo::utils::ms_sql_tb::get_table_names;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    let mut db = Database::new().await;
-    let sql = r#"
-            SELECT tbl.name AS table_name
-            FROM sys.tables tbl
-            WHERE tbl.is_ms_shipped = 0
-                AND tbl.type = 'U'
-            ORDER BY tbl.name;
-        "#;
-        
-    let rows = db.sqlect(sql).await;
-    for row in rows {
-        let table_name: &str = row.get(0).unwrap_or_default();
-        print!("{} \n", table_name);
+    let res = get_table_names().await;
+    let mut tb_names: Vec<String> = Vec::new();
+    match res {
+        Some(r) => {
+            tb_names = r.to_owned();
+        }
+        None => println!("data not found"),
     }
+
+    for tb in &tb_names {
+        println!("{}", tb)
+    }
+    // if tb_names != null {
+    // tb_names.iter().map(|x| println!("{}", x));
+    // }
 
     Ok(())
 }
