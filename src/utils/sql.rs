@@ -16,7 +16,7 @@ pub fn query_colums<'a>() -> &'a str {
 			ELSE TYPE_NAME(c.system_type_id)
 		END                                                             AS data_type,
 		COLUMNPROPERTY(c.object_id, c.name, 'charmaxlen')               AS character_maximum_length,
-		OBJECT_DEFINITION(c.default_object_id)                          AS column_default,
+		ISNULL(OBJECT_DEFINITION(c.default_object_id), '')              AS column_default,
 		c.is_nullable                                                   AS is_nullable,
 		COLUMNPROPERTY(c.object_id, c.name, 'IsIdentity')               AS is_identity,
 		OBJECT_NAME(c.object_id)                                        AS table_name,
