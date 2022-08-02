@@ -15,7 +15,8 @@ async fn main() -> anyhow::Result<()> {
         println!("{}", tb)
     }
 
-    get_all_colums("t_1").await;
+    let cols = get_all_colums("t_1").await;
+    println!("{}", cols[0].column_name);
 
     Ok(())
 }
