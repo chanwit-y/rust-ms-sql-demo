@@ -15,7 +15,7 @@ async fn main() -> anyhow::Result<()> {
         println!("{}", tb)
     }
 
-    get_all_colums("'t1'").await;
+    get_all_colums("t_1").await;
 
     Ok(())
 }

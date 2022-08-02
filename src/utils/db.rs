@@ -1,5 +1,5 @@
 use std::result::Result;
-use tiberius::{AuthMethod, Client, Config, Row};
+use tiberius::{AuthMethod, Client, Config, Row, ToSql};
 use tokio::net::TcpStream;
 use tokio_util::compat::{Compat, TokioAsyncWriteCompatExt};
 
@@ -41,9 +41,9 @@ impl Database {
 
     }
 
-    pub async fn selelec_where(&mut self, sql: &str) -> Vec<Row> {
+    pub async fn selelec_where<'a>(&mut self, sql: &str, params: &'a [&'a dyn ToSql]) -> Vec<Row> {
         let client = &mut self.client;
-        let stream = client.query(sql, &[&"t1"]).await.unwrap();
+        let stream = client.query(sql, params).await.unwrap();
 
         stream.into_first_result().await.unwrap()
 
