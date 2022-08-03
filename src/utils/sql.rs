@@ -35,3 +35,35 @@ pub fn query_colums<'a>() -> &'a str {
 	ORDER BY table_name, COLUMNPROPERTY(c.object_id, c.name, 'ordinal');  
 	"#
 }
+
+fn query_foreign_key<'a>() -> &'a str {
+    r#"
+            SELECT OBJECT_NAME(fkc.constraint_object_id) AS constraint_name,
+                parent_table.name                       AS table_name,
+                referenced_table.name                   AS referenced_table_name,
+                SCHEMA_NAME(referenced_table.schema_id) AS referenced_schema_name,
+                parent_column.name                      AS column_name,
+                referenced_column.name                  AS referenced_column_name,
+                fk.delete_referential_action            AS delete_referential_action,
+                fk.update_referential_action            AS update_referential_action,
+                fkc.constraint_column_id                AS ordinal_position
+            FROM sys.foreign_key_columns AS fkc
+                    INNER JOIN sys.tables AS parent_table
+                                ON fkc.parent_object_id = parent_table.object_id
+                    INNER JOIN sys.tables AS referenced_table
+                                ON fkc.referenced_object_id = referenced_table.object_id
+                    INNER JOIN sys.columns AS parent_column
+                                ON fkc.parent_object_id = parent_column.object_id
+                                    AND fkc.parent_column_id = parent_column.column_id
+                    INNER JOIN sys.columns AS referenced_column
+                                ON fkc.referenced_object_id = referenced_column.object_id
+                                    AND fkc.referenced_column_id = referenced_column.column_id
+                    INNER JOIN sys.foreign_keys AS fk
+                                ON fkc.constraint_object_id = fk.object_id
+                                    AND fkc.parent_object_id = fk.parent_object_id
+            WHERE parent_table.is_ms_shipped = 0
+            AND referenced_table.is_ms_shipped = 0
+            AND OBJECT_SCHEMA_NAME(fkc.parent_object_id) = @P1
+            ORDER BY table_name, constraint_name, ordinal_position
+        "#
+}

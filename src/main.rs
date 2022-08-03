@@ -1,4 +1,4 @@
-use rust_ms_sql_demo::utils::ms_sql_tb::{get_all_colums, get_table_names};
+use rust_ms_sql_demo::utils::{ms_sql_tb, db::Database};
 // use indicatif::{ProgressBar, ProgressStyle, ProgressState};
 // use std::time::Duration;
 // use tokio::runtime;
@@ -7,7 +7,10 @@ use rust_ms_sql_demo::utils::ms_sql_tb::{get_all_colums, get_table_names};
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    let res = get_table_names().await;
+
+    let db = Database::new().await;
+    let mut ms_sql = ms_sql_tb::new(db).await;
+    let res = ms_sql.get_table_names().await;
     let mut tb_names: Vec<String> = Vec::new();
     match res {
         Some(r) => {
@@ -20,13 +23,37 @@ async fn main() -> anyhow::Result<()> {
         println!("{}", tb)
     }
 
-    let cols = get_all_colums("t_1").await;
-    println!("{}", cols[0].column_name);
+    // println!("---------------------------------");
+    // let cols = get_all_colums("TRIP").await;
+    // for col in cols {
+    //     println!("{}", col.column_name);
+    // }
 
     //  loading().await;
 
     Ok(())
 }
+
+//  struct A <'b>{
+//     fname: String,
+//     lname: String
+// }
+
+// fn test<'a>(a: &'a str, b: &'a str) -> &'a str {
+//     if a.len() > b.len() {
+//         a
+//     } else {
+//         b
+//     }
+// }
+
+// fn testx<'a>(a: &'a i32, b: &'a i32) -> &'a i32 {
+//     if a > b {
+//         a
+//     } else {
+//         b
+//     }
+// }
 
 //  async fn  loading() {
 //     let steps = 1024;
