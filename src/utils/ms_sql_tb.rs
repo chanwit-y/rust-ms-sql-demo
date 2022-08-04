@@ -2,7 +2,7 @@ use crate::models::colums::TableColumn;
 
 use super::{
     db::Database,
-    sql::{query_colums, query_tables},
+    sql::{query_colums, query_tables, query_foreign_key},
 };
 
 pub struct MsSqlTable {
@@ -51,19 +51,29 @@ impl MsSqlTable {
             let col: TableColumn = TableColumn {
                 column_name: column_name.to_string(),
                 data_type: data_type.to_string(),
-                character_maximum_length: character_maximum_length,
+                character_maximum_length,
                 column_default: column_default.to_string(),
-                is_nullable: is_nullable,
-                is_identity: is_identity,
+                is_nullable,
+                is_identity,
                 table_name: table_name.to_string(),
                 constraint_name: constraint_name.to_string(),
-                numeric_precision: numeric_precision,
-                numeric_scale: numeric_scale,
+                numeric_precision,
+                numeric_scale,
             };
             colums.push(col);
         }
 
         colums
+    }
+
+    pub async fn get_foreign_keys(&mut self, tb_name: &str) {
+        // let mut db = Database::new().await;
+        let db = &mut self.db;
+        let rows = db.selelec_where(query_foreign_key(), &[&tb_name]).await;
+
+        for row in rows {
+            
+        }
     }
 }
 
@@ -116,7 +126,3 @@ impl MsSqlTable {
 
 //     colums
 // }
-
-pub async fn get_foreign_keys(tb_name: &str) {
-    let mut db = Database::new().await;
-}

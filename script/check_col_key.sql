@@ -1,16 +1,5 @@
-pub fn query_tables<'a>() -> &'a str {
-    r#"
-            SELECT tbl.name AS table_name
-            FROM sys.tables tbl
-            WHERE tbl.is_ms_shipped = 0
-                AND tbl.type = 'U'
-            ORDER BY tbl.name;
-	"#
-}
-
-pub fn query_colums<'a>() -> &'a str {
-    r#"
-		SELECT c.name                                                   AS column_name,
+    
+SELECT c.name                                                   AS column_name,
 		CASE typ.is_assembly_type
 			WHEN 1 THEN TYPE_NAME(c.user_type_id)
 			ELSE TYPE_NAME(c.system_type_id)
@@ -30,15 +19,12 @@ pub fn query_colums<'a>() -> &'a str {
 	FROM sys.columns c
 		INNER JOIN sys.tables t ON c.object_id = t.object_id
 		INNER JOIN sys.types typ ON c.user_type_id = typ.user_type_id
-	WHERE OBJECT_NAME(c.object_id) = @P1 
+	WHERE OBJECT_NAME(c.object_id) = 'TRIP_ITEMS'
 	AND t.is_ms_shipped = 0
 	ORDER BY table_name, COLUMNPROPERTY(c.object_id, c.name, 'ordinal');  
-	"#
-}
 
-pub fn query_foreign_key<'a>() -> &'a str {
-    r#"
-            SELECT OBJECT_NAME(fkc.constraint_object_id) AS constraint_name,
+
+SELECT OBJECT_NAME(fkc.constraint_object_id) AS constraint_name,
                 parent_table.name                       AS table_name,
                 referenced_table.name                   AS referenced_table_name,
                 SCHEMA_NAME(referenced_table.schema_id) AS referenced_schema_name,
@@ -63,14 +49,11 @@ pub fn query_foreign_key<'a>() -> &'a str {
                                     AND fkc.parent_object_id = fk.parent_object_id
             WHERE parent_table.is_ms_shipped = 0
             AND referenced_table.is_ms_shipped = 0
-            AND OBJECT_SCHEMA_NAME(fkc.parent_object_id) = @P1
+            -- AND parent_table.name = 'CAR'
+            AND referenced_table.name = 'TRIP_ITEMS'
             ORDER BY table_name, constraint_name, ordinal_position
-        "#
-}
-
-pub fn query_index<'a>() -> &'a str {
-    r#"
-        SELECT DISTINCT
+        
+SELECT DISTINCT
                 ind.name AS index_name,
                 ind.is_unique AS is_unique,
                 ind.is_unique_constraint AS is_unique_constraint,
@@ -89,8 +72,8 @@ pub fn query_index<'a>() -> &'a str {
             INNER JOIN
                 sys.tables t ON ind.object_id = t.object_id
             WHERE t.is_ms_shipped = 0
-                AND t.name = @P1 
-                AND col.name = @P2 
+                AND t.name = 'CAR'
+                AND col.name = 'TAI_ID' 
                 AND ind.filter_definition IS NULL
                 AND ind.name IS NOT NULL
                 AND ind.type_desc IN (
@@ -100,5 +83,4 @@ pub fn query_index<'a>() -> &'a str {
                     'NONCLUSTERED COLUMNSTORE'
                 )
             ORDER BY table_name, index_name, seq_in_index
-    "#
-}
+
